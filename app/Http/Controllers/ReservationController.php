@@ -70,8 +70,19 @@ class ReservationController extends Controller
      * @param  \App\Reservation  $reservation
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Reservation $reservation)
+    public function destroy(Request $request, $id)
     {
-        //
+        if ($request->isJson()) {
+            $reservation = Reservation::find($id);
+
+            if($reservation) {
+                $reservation->delete();
+                return response()->json($reservation, 200);
+            }
+            return response()->json(['error' => 'No content'], 406);
+        } else {
+            return response()->json(['error' => 'Unauthorized'], 401, []);
+        }
+    }
     }
 }
